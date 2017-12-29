@@ -1,3 +1,5 @@
+library(bsts)
+plot(model, "components")    #### This is EXTREMELY SLOW, crashed last time with n = 5000.  Much slower than building the model
 
 
 # coefficients ====
@@ -13,7 +15,8 @@ ggplot(x, aes(id, val, col = key)) +
 sigma_df <- tibble(
   sigma.obs = model$sigma.obs,
   sigma.level = model$sigma.level,
-  sigma.seasonal.24 = model$sigma.seasonal.24
+  sigma.seasonal.24 = model$sigma.seasonal.24,
+  sigma.seasonal.168 = model$sigma.seasonal.168,
   ) %>%
   mutate(id = row_number()) %>%
   gather(key, val, -id)
@@ -28,6 +31,9 @@ ggplot(sigma_df %>% filter(key == "sigma.seasonal.24"), aes(id, val, col = key))
 
 
 
+df <- model$one.step.prediction.errors %>%
+  as_tibble() %>%
+  transpose_df()
 
 df <- model$final.state %>%
   as_tibble() %>%
@@ -36,7 +42,7 @@ df <- model$final.state %>%
 
 
 ggplot(df, aes(id, val, col = key)) +
-  geom_line()
+  geom_line(show.legend = F)
 
 
 
@@ -144,9 +150,9 @@ opts %>%
   map( ~ df %>%
          filter(key == .x) %>%
          mutate(idx = row_number()) %>%
-         ggplot(aes(idx, val, col = key, grp = key.id)) +
-           geom_line(alpha = 0.3) +
-           facet_grid(key ~ .))
+         ggplot(aes(idx, val, grp = id)) +
+         geom_line(alpha = 0.5) +
+         theme_classic())
 
 
 df_x <- df %>%
@@ -157,3 +163,14 @@ ggplot(df_x, aes(idx, val, grp = id)) +
   geom_line(alpha = 0.5, size = 0.1)
 
 
+
+df_x <- df %>%
+  filter(key == "seasonal.168.1") %>%
+  mutate(idx = row_number())
+
+ggplot(df_x, aes(idx, val, grp = id)) +
+  geom_line(alpha = 0.8, size = 0.1) +
+  theme_classic()
+
+
+model$one.step.prediction.errors
