@@ -15,7 +15,7 @@ plot_model <- function(fc_ls, comp_ls, prod_cat, replication_id) {
                           c(2, 3),
                           c(4, 5)))
 
-  ggsave(filename = paste0("plots/saved models/model_", replication_id,"_", prod_cat,".png"), plot = obj,
+  ggsave(filename = paste0("extdata/plots/model_", replication_id,"_", prod_cat,".png"), plot = obj,
          units = "in", width = 15, height = 10)
 
 }
