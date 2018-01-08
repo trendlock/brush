@@ -15,9 +15,14 @@ library(ggplot2)
 library(gtable)
 library(gridExtra)
 
+# check plots...
+
+comp_ls[["trend"]][["plot"]] %>% is_empty()
+
+
 
 title <- lubridate::now() %>% as.numeric() %>% round()
-
+cat <-  "Beer"
 x <- grid.arrange(
   grobs = list(fc_ls[["plot"]] + ggtitle(paste0("Model ", title, " ", cat)),
                comp_ls[["trend"]][["plot"]],
@@ -31,5 +36,5 @@ x <- grid.arrange(
                         c(4, 5)))
 
 
-
+x
 ggsave(filename="ab.png", plot = x, units = "in", width = 15, height = 10)
