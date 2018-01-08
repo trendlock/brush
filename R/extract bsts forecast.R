@@ -35,7 +35,20 @@ extract_bstb_forecast <- function(pred_obj, next_periods) {
 
  fc_df <- fc_df %>%
    dplyr::select(bin_id, key, value, Total, AIR_TEMP, PRCP) %>%
-   spread(key, value) %>%
+   spread(key, value)
+
+
+ # root mean square error (for mean and median forecast)
+
+ df_err <- fc_df %>%
+   mutate(diff.mean = Total - `Forecast (Median)`,
+          diff.med = Total - `Forecast (Mean)`)
+
+ rmse_mean <-  sqrt(mean(pull(df_err, diff.mean)^2))
+ rmse_med <-  sqrt(mean(pull(df_err, diff.med)^2))
+
+
+ fc_df <- fc_df %>%
    gather(key, value, -bin_id)
 
 
@@ -46,6 +59,8 @@ extract_bstb_forecast <- function(pred_obj, next_periods) {
    scale_alpha_manual(values = c(0.5, 0.5, 1, 1, 1, 1, 1))
 
 
- list(data = fc_df, plot = fc_plot)
+
+
+ list(data = fc_df, plot = fc_plot, rmse_ls = list(rmse_med = rmse_med, rmse_mean = rmse_mean))
 
 }

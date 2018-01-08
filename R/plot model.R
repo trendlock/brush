@@ -1,10 +1,10 @@
 
 #' @export
 
-plot_model <- function(fc_ls, comp_ls, prod_cat, replication_id) {
+plot_model <- function(fc_ls, comp_ls, prod_cat, replication_id, rmse_ls) {
 
   obj <- grid.arrange(
-    grobs = list(fc_ls[["plot"]] + ggtitle(paste0("Model ", replication_id, " ", prod_cat)),
+    grobs = list(fc_ls[["plot"]] + ggtitle(paste0("Model ", replication_id, " ", prod_cat, " RMS Err - med: ", rmse_ls[["rmse_med"]], " mean: ", rmse_ls[["rmse_mean"]])),
                  comp_ls[["trend"]][["plot"]],
                  comp_ls[["seasonal.24.1"]][["plot"]],
                  comp_ls[["seasonal.168.1"]][["plot"]],
