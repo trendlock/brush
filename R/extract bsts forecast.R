@@ -62,7 +62,8 @@ extract_bstb_forecast <- function(pred_obj, next_periods) {
    geom_line() +
    scale_colour_manual(values = c("green", "green","orange","red","black")) +
    scale_size_manual(values = c(1, 1, 1, 1.2, 1.2, 1, 1.5)) +
-   scale_alpha_manual(values = c(0.5, 0.5, 1, 1, 1, 1, 1))
+   scale_alpha_manual(values = c(0.5, 0.5, 1, 1, 1, 1, 1)) +
+   scale_x_datetime(labels=scales::date_format("%A"), date_breaks = "1 day", name = NULL)
 
  #weather plots
 
