@@ -43,7 +43,7 @@ extract_bstb_forecast <- function(pred_obj, next_periods) {
 
 
  fc_df <- fc_df %>%
-   select(-AIR_TEMP, -PRCP)
+   dplyr::select(-AIR_TEMP, -PRCP)
  # root mean square error (for mean and median forecast)
 
  df_err <- fc_df %>%
@@ -60,7 +60,7 @@ extract_bstb_forecast <- function(pred_obj, next_periods) {
 
  fc_plot <- ggplot(fc_df, aes(bin_id, value, col = key, size = key, alpha = key)) +
    geom_line() +
-   scale_colour_manual(values = c("green", "green","yellow","orange","red","blue","black")) +
+   scale_colour_manual(values = c("green", "green","orange","red","black")) +
    scale_size_manual(values = c(1, 1, 1, 1.2, 1.2, 1, 1.5)) +
    scale_alpha_manual(values = c(0.5, 0.5, 1, 1, 1, 1, 1))
 
