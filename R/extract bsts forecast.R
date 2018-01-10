@@ -37,7 +37,13 @@ extract_bstb_forecast <- function(pred_obj, next_periods) {
    dplyr::select(bin_id, key, value, Total, AIR_TEMP, PRCP) %>%
    spread(key, value)
 
+ weather_df <- fc_df %>%
+   dplyr::select(bin_id, AIR_TEMP, PRCP) %>%
+   gather(cat, val, -bin_id)
 
+
+ fc_df <- fc_df %>%
+   dplyr::select(-AIR_TEMP, -PRCP)
  # root mean square error (for mean and median forecast)
 
  df_err <- fc_df %>%
@@ -54,13 +60,23 @@ extract_bstb_forecast <- function(pred_obj, next_periods) {
 
  fc_plot <- ggplot(fc_df, aes(bin_id, value, col = key, size = key, alpha = key)) +
    geom_line() +
-   scale_colour_manual(values = c("green", "green","yellow","orange","red","blue","black")) +
+   scale_colour_manual(values = c("green", "green","orange","red","black")) +
    scale_size_manual(values = c(1, 1, 1, 1.2, 1.2, 1, 1.5)) +
    scale_alpha_manual(values = c(0.5, 0.5, 1, 1, 1, 1, 1))
 
+ #weather plots
+
+ weather_cats <- weather_df$cat %>% unique()
+ weather_plots <- weather_cats %>%
+   map( ~ weather_df %>%
+          filter(cat == .x) %>%
+          ggplot(aes(x = bin_id, y = val)) +
+          geom_line() +
+          ggtitle(.x)) %>%
+   set_names(weather_cats)
 
 
 
- list(data = fc_df, plot = fc_plot, rmse_ls = list(rmse_med = rmse_med, rmse_mean = rmse_mean))
+ list(data = fc_df, plot = fc_plot, weather_plots = weather_plots, rmse_ls = list(rmse_med = rmse_med, rmse_mean = rmse_mean))
 
 }
