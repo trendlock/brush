@@ -3,6 +3,24 @@
 model_obj <- read_rds(find::this("/internal data storage/bat country/bsts models/model_3.rds"))
 
 
+df_cof <- model_obj$coefficients %>% as_tibble() %>% mutate(bin_id = row_number()) %>%
+  gather(cat, val, -bin_id)
+
+ggplot(df_cof, aes(bin_id, val, col = cat)) +
+  geom_line()
+
+
+df_cof %>%
+  filter(val != 0)
+
+
+
+
+df_coef <- model_obj$coefficients %>%
+  as.tibble() %>%
+  mutate(id = row_number()) %>%
+  gather(key, distrobution, -id)
+
 
 df <- model_obj$state.contributions %>%
   as.tibble() %>%

@@ -5,7 +5,7 @@
 extract_bsts_components <- function(model_obj) {
 
 
-  df <- model_obj$state.contributions %>%
+  df <- model_obj$coefficients %>%
     as.tibble() %>%
     mutate(id = row_number()) %>%
     gather(key, distrobution, -id)
